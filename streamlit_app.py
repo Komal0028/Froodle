@@ -137,9 +137,7 @@ def render_hero():
         <div class="hero">
             <div class="hero-title">Froodle</div>
             <div class="hero-sub">
-                Turn your webcam into a pen. Real-time hand tracking with
-                MediaPipe + OpenCV lets you draw in the air — no mouse,
-                no touchscreen, just your index finger.
+                i am still figuring out what to write here...
             </div>
             <div class="badge-row">
                 <span class="badge">🧠 MediaPipe Hand Tracking</span>
