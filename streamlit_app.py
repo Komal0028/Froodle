@@ -135,7 +135,7 @@ def render_hero():
     st.markdown(
         """
         <div class="hero">
-            <div class="hero-title">✋ AI Air Whiteboard</div>
+            <div class="hero-title">Froodle</div>
             <div class="hero-sub">
                 Turn your webcam into a pen. Real-time hand tracking with
                 MediaPipe + OpenCV lets you draw in the air — no mouse,
@@ -144,7 +144,7 @@ def render_hero():
             <div class="badge-row">
                 <span class="badge">🧠 MediaPipe Hand Tracking</span>
                 <span class="badge">🎨 OpenCV Rendering</span>
-                <span class="badge">🤖 GPT-4o Vision (optional)</span>
+                <span class="badge">🤖 GPT-4o Vision (under construction..)</span>
                 <span class="badge">⚡ Real-time, local, no cloud needed</span>
             </div>
         </div>
@@ -180,11 +180,11 @@ def render_draw_tab():
     and streams back. No native window, no local-only subprocess.
     """
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-    st.subheader("🎥 Draw in the Browser")
+    st.subheader("happy drawing")
     st.write(
         "Allow camera access below, then raise only your index finger "
-        "and start drawing. Works on your laptop *and* once this app is "
-        "deployed publicly — the video streams through your own browser."
+        "and start drawing twin."
+       
     )
 
     col_video, col_controls = st.columns([2, 1])
