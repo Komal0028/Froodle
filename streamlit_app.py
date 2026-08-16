@@ -1,5 +1,4 @@
 
-
 import os
 import glob
 import subprocess
@@ -83,37 +82,60 @@ def load_css():
 
         /* ---------- hero ---------- */
         .hero {
-            padding: 44px 40px 38px;
+            padding: 52px 48px 44px;
             border-radius: 22px;
             margin-bottom: 26px;
             background: var(--paper-2);
             border: 2px solid var(--ink);
             box-shadow: 6px 6px 0 var(--line);
             position: relative;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .hero-eyebrow {
             font-family: var(--font-mono);
             font-size: 11.5px; font-weight: 700; letter-spacing: 2px;
             text-transform: uppercase; color: var(--ink-soft);
-            margin-bottom: 6px;
+            margin-bottom: 10px;
+            text-align: center;
         }
         .hero-title {
             font-family: var(--font-display);
-            font-size: 76px;
-            line-height: 0.95;
+            font-size: 140px;
+            line-height: 0.9;
             font-weight: 700;
-            letter-spacing: 0.5px;
-            margin: 0 0 4px 0;
-            color: var(--ink);
-            display: inline-block;
+            letter-spacing: 1px;
+            margin: 0 0 6px 0;
+            color: #000000;
+            -webkit-text-stroke: 1.5px #000000;
+            text-align: center;
         }
-        .hero-squiggle { display: block; margin: 2px 0 14px -4px; }
-        .hero-sub { color: var(--ink-soft); font-size: 17px; max-width: 620px; line-height: 1.55; }
+        .hero-squiggle { display: block; margin: 0 auto 18px auto; }
+        .hero-sub {
+            color: var(--ink-soft); font-size: 17px; max-width: 620px; line-height: 1.55;
+            text-align: center; margin: 0 auto;
+        }
 
-        .badge-row { margin-top: 22px; display: flex; gap: 12px; flex-wrap: wrap; }
+        .badge-row {
+            margin-top: 28px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            width: 100%;
+        }
         .badge {
-            padding: 7px 16px; border-radius: 999px; font-size: 13px; font-weight: 700;
+            padding: 12px 14px; border-radius: 12px; font-size: 13px; font-weight: 700;
             background: var(--paper-2); color: var(--ink);
+            display: flex; align-items: center; justify-content: center; gap: 9px;
+        }
+        .badge::before {
+            content: "";
+            width: 11px; height: 11px; border-radius: 50%;
+            background: var(--line-shadow);
+            border: 1.5px solid var(--ink);
+            flex-shrink: 0;
         }
         .badge-row .badge:nth-child(1) { --line-shadow: var(--sky); }
         .badge-row .badge:nth-child(2) { --line-shadow: var(--coral); }
