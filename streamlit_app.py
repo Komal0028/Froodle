@@ -251,7 +251,7 @@ def render_hero():
                 <path d="M3 12C20 3 35 3 52 10C69 17 84 5 101 6C118 7 130 15 148 9C166 3 180 12 198 8C207 6 213 9 217 12"
                       stroke="#FF6A52" stroke-width="4" stroke-linecap="round"/>
             </svg>
-            <div class="hero-sub">
+            <div class="hero-sub" style="text-align: center;">
                 i am still figuring out what to write here...
             </div>
             <div class="badge-row">
