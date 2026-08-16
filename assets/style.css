@@ -1,0 +1,65 @@
+/* style.css
+   Base dark glassmorphism theme for the AI Air Whiteboard dashboard. */
+
+.stApp {
+    background: radial-gradient(circle at top left, #1b1f3b 0%, #0d0f1c 60%, #060709 100%);
+    color: #eaeaf0;
+}
+
+.glass-card {
+    padding: 24px 28px;
+    margin-bottom: 22px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.045);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.30);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-card:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+.stButton > button {
+    border-radius: 999px !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    padding: 10px 22px !important;
+    box-shadow: 0 4px 18px rgba(99, 102, 241, 0.35) !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 26px rgba(139, 92, 246, 0.45) !important;
+}
+
+.stDownloadButton > button {
+    border-radius: 999px !important;
+    background: rgba(255,255,255,0.08) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    color: #eaeaf0 !important;
+    font-weight: 600 !important;
+}
+
+.stTabs [data-baseweb="tab-list"] {
+    gap: 6px;
+}
+.stTabs [data-baseweb="tab"] {
+    border-radius: 12px 12px 0 0;
+    padding: 8px 18px;
+    background: rgba(255,255,255,0.03);
+}
+
+h1, h2, h3 {
+    font-family: 'Segoe UI', 'Inter', sans-serif;
+    font-weight: 700 !important;
+}
+
+img {
+    border-radius: 14px !important;
+}
