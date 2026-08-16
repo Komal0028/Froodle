@@ -100,7 +100,6 @@ def load_css():
         .hero-title {
             font-family: var(--font-display);
             font-size: 76px;
-            text-align: center;
             line-height: 0.95;
             font-weight: 700;
             letter-spacing: 0.5px;
@@ -108,14 +107,14 @@ def load_css():
             color: var(--ink);
             display: inline-block;
         }
-        .hero-squiggle {display: block;margin: 4px auto 14px auto;}
+        .hero-squiggle { display: block; margin: 2px 0 14px -4px; }
+        .hero-sub { color: var(--ink-soft); font-size: 17px; max-width: 620px; line-height: 1.55; }
 
-        .hero-sub {color: var(--ink-soft);font-size: 17px;line-height: 1.55;text-align: center;margin: 0 auto 22px auto;}
-
-
-        .badge-row {width: 100%;margin-top: 20px;display: grid;grid-template-columns: repeat(4, 1fr);gap: 12px;align-items: stretch;}
-        ..badge {width: 100%;min-height: 44px;padding: 9px 12px;border-radius: 999px;font-size: 13px;font-weight: 700;background: var(--paper-2);color: var(--ink);
-    display: flex;align-items: center;justify-content: center;text-align: center;box-sizing: border-box;}
+        .badge-row { margin-top: 22px; display: flex; gap: 12px; flex-wrap: wrap; }
+        .badge {
+            padding: 7px 16px; border-radius: 999px; font-size: 13px; font-weight: 700;
+            background: var(--paper-2); color: var(--ink);
+        }
         .badge-row .badge:nth-child(1) { --line-shadow: var(--sky); }
         .badge-row .badge:nth-child(2) { --line-shadow: var(--coral); }
         .badge-row .badge:nth-child(3) { --line-shadow: var(--grape); }
@@ -239,45 +238,33 @@ def load_css():
     )
 
 
-
+# =====================================================================
+# LAYOUT PIECES
+# =====================================================================
 def render_hero():
     st.markdown(
         """
         <div class="hero">
-            <div class="hero-eyebrow">AIR-DRAWING, SKETCHED IN REAL TIME</div>
-
+            <div class="hero-eyebrow">Air-drawing, sketched in real time</div>
             <div class="hero-title">Froodle</div>
-
-            <div class="hero-squiggle-wrap">
-                <svg class="hero-squiggle"
-                     width="220"
-                     height="18"
-                     viewBox="0 0 220 18"
-                     fill="none"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 12C20 3 35 3 52 10C69 17 84 5 101 6
-                             C118 7 130 15 148 9C166 3 180 12 198 8
-                             C207 6 213 9 217 12"
-                          stroke="#FF6A52"
-                          stroke-width="4"
-                          stroke-linecap="round"/>
-                </svg>
-            </div>
-
+            <svg class="hero-squiggle" width="220" height="18" viewBox="0 0 220 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 12C20 3 35 3 52 10C69 17 84 5 101 6C118 7 130 15 148 9C166 3 180 12 198 8C207 6 213 9 217 12"
+                      stroke="#FF6A52" stroke-width="4" stroke-linecap="round"/>
+            </svg>
             <div class="hero-sub">
-                No touch. No click. Just draw.
+                i am still figuring out what to write here...
             </div>
-
             <div class="badge-row">
                 <span class="badge">🧠 MediaPipe Hand Tracking</span>
                 <span class="badge">🎨 OpenCV Rendering</span>
-                <span class="badge">🤖 GPT-4o Vision</span>
-                <span class="badge">⚡ Real-time & Local</span>
+                <span class="badge">🤖 GPT-4o Vision (under construction..)</span>
+                <span class="badge">⚡ Real-time, local, no cloud needed</span>
             </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
+
 
 def render_stats(num_drawings: int, ai_ready: bool):
     col1, col2, col3, col4 = st.columns(4)
