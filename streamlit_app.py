@@ -245,7 +245,12 @@ CRITTER_GIRAFFE = """
 
 
 def render_hero():
-    st.markdown(
+    # IMPORTANT: dedent the multiline HTML before passing it to st.markdown.
+    # Otherwise Markdown treats the leading indentation as a code block and
+    # displays the HTML tags as text.
+    import textwrap
+
+    hero_html = textwrap.dedent(
         f"""
         <div class="hero">
             {CRITTER_PANDA}{CRITTER_ELEPHANT}{CRITTER_BEAR}{CRITTER_GIRAFFE}
@@ -256,7 +261,7 @@ def render_hero():
                     <path d="M3 12C20 3 35 3 52 10C69 17 84 5 101 6C118 7 130 15 148 9C166 3 180 12 198 8C207 6 213 9 217 12"
                           stroke="#FF6A52" stroke-width="4" stroke-linecap="round"/>
                 </svg>
-                <div class="hero-sub">i am still figuring out what to write here...</div>
+                <div class="hero-sub">Draw in the air. Turn gestures into ideas.</div>
                 <div class="badge-row">
                     <span class="badge">🧠 MediaPipe Hand Tracking</span>
                     <span class="badge">🎨 OpenCV Rendering</span>
@@ -265,9 +270,10 @@ def render_hero():
                 </div>
             </div>
         </div>
-        """,
-        unsafe_allow_html=True,
-    )
+        """
+    ).strip()
+
+    st.markdown(hero_html, unsafe_allow_html=True)
 
 
 def render_stats(num_drawings, ai_ready):
