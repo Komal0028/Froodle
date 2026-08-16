@@ -1,4 +1,4 @@
-# ✋  Air Draw
+# ✋  Frooddle
 
 Draw in the air with your bare hand. Your webcam + an AI hand-tracking
 model turn your index fingertip into a pen, and your movements appear as
@@ -44,15 +44,6 @@ This uses WebRTC so it also works once deployed to Streamlit Community
 Cloud — the video streams through the *visitor's own browser and
 webcam*, not the server's.
 
-## Deploying to Streamlit Community Cloud
-1. Push this repo to GitHub (make sure `requirements.txt` and
-   `packages.txt` are both committed — `packages.txt` installs system
-   libraries OpenCV/MediaPipe need on Streamlit's Linux servers).
-2. On share.streamlit.io, create a new app pointing at `streamlit_app.py`.
-3. Deploy. Use the **🎥 Draw in Browser** tab once live — the
-   **💻 Local Launch** tab (native OpenCV window) intentionally does
-   nothing on a cloud deployment, since a remote server has no display
-   or webcam of its own.
 
 ## Folder Structure
 ```
