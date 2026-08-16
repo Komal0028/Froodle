@@ -164,7 +164,7 @@ def render_hero():
                 <path d="M3 12C20 3 35 3 52 10C69 17 84 5 101 6C118 7 130 15 148 9C166 3 180 12 198 8C207 6 213 9 217 12"
                       stroke="#FF6A52" stroke-width="4" stroke-linecap="round"/>
             </svg>
-            <div class="hero-sub">i am still figuring out what to write here...</div>
+            <div class="hero-sub">still figuring out what to write here...</div>
             <div class="badge-row">
                 <span class="badge">🧠 MediaPipe Hand Tracking</span>
                 <span class="badge">🎨 OpenCV Rendering</span>
@@ -192,7 +192,7 @@ def render_stats(num_drawings, ai_ready):
 
 def render_draw_tab():
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-    st.subheader("happy drawing")
+    st.subheader("happy drawing slay")
     st.write("Allow camera access below, then raise only your index finger and start drawing twin.")
 
     col_video, col_controls = st.columns([2, 1])
@@ -263,8 +263,8 @@ def render_local_launch_tab():
     st.subheader("💻 Launch Native Window (local only)")
     st.write(
         "If you're running this dashboard on your own computer (not a cloud deployment), "
-        "you can alternatively launch the classic native OpenCV window — slightly lower "
-        "latency than the browser version above."
+        "this will work "
+       
     )
     if st.button("▶  Start Native Whiteboard", use_container_width=True):
         try:
@@ -273,8 +273,8 @@ def render_local_launch_tab():
         except Exception as e:
             st.error(f"Could not launch whiteboard: {e}")
     st.caption(
-        "⚠️ This button does nothing useful when the app is deployed to a server "
-        "(e.g. Streamlit Community Cloud) — use the **Draw in Browser** tab instead."
+        "⚠️ This button does nothing useful just like me gang hehehe "
+        
     )
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -287,13 +287,13 @@ def render_gallery_tab():
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     header_col1, header_col2 = st.columns([3, 1])
     with header_col1:
-        st.subheader("🖼️ Saved Drawings")
+        st.subheader("Saved Drawings")
     with header_col2:
         if images:
             st.caption(f"{len(images)} saved")
 
     if not explainer.is_configured():
-        st.caption("ℹ️ Set an OpenAI API key in **Settings** to enable 'Explain My Drawing'.")
+        st.caption("STILL WORKING HERE.")
 
     if not images:
         st.markdown(
@@ -346,13 +346,13 @@ def render_settings_tab():
     st.divider()
     st.caption(
         "The core whiteboard (drawing, erasing, saving) never requires an API key or "
-        "internet connection — this only powers the optional AI description feature."
+        "internet connection.Still working on this gang."
     )
     st.markdown("</div>", unsafe_allow_html=True)
 
 
 def main():
-    st.set_page_config(page_title="AI Air Whiteboard", page_icon="✋", layout="wide")
+    st.set_page_config(page_title="Foodle", page_icon="☆", layout="wide")
     load_css()
     render_hero()
 
