@@ -1,21 +1,4 @@
-"""
-streamlit_app.py
------------------
-WHY THIS FILE EXISTS:
-Real-time hand-tracking needs a tight webcam-read -> AI-inference ->
-draw loop, running dozens of times per second. Streamlit's execution
-model (re-running the whole script on every interaction) isn't built
-for that kind of continuous native-webcam loop, so the actual drawing
-experience lives in main.py using a normal OpenCV window (this is the
-same architecture real "AI Virtual Painter" apps use).
 
-This file is the *dashboard*: a premium-looking control center where the
-user launches the whiteboard, browses saved drawings, and runs the
-"Explain My Drawing" generative-AI feature on any saved PNG.
-
-RUN WITH:
-    streamlit run streamlit_app.py
-"""
 
 import os
 import glob
@@ -32,10 +15,6 @@ from utils import COLOR_PALETTE, MIN_BRUSH_SIZE, MAX_BRUSH_SIZE, DEFAULT_BRUSH_S
 
 SAVED_DIR = "assets/saved"
 
-# Public STUN server so WebRTC can establish a peer connection through
-# NATs/firewalls once this app is deployed to a real server (Streamlit
-# Community Cloud, etc). Without this, the browser<->server video
-# connection often fails to negotiate outside of localhost.
 RTC_CONFIGURATION = RTCConfiguration(
     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
 )
@@ -171,12 +150,7 @@ def render_stats(num_drawings: int, ai_ready: bool):
 
 
 def render_draw_tab():
-    """
-    The browser-based whiteboard. Works both locally AND once deployed —
-    the webcam feed streams from the visitor's own browser via WebRTC,
-    gets processed frame-by-frame on the server (hand tracking + drawing),
-    and streams back. No native window, no local-only subprocess.
-    """
+    
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     st.subheader("happy drawing")
     st.write(
@@ -214,8 +188,6 @@ def render_draw_tab():
             async_processing=True,
         )
 
-    # Push the sidebar's current settings into the live processor instance.
-    # video_processor is only available once the stream has actually started.
     if ctx.video_processor:
         ctx.video_processor.current_color_name = color_name
         ctx.video_processor.brush_size = brush_size
