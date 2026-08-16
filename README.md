@@ -1,4 +1,4 @@
-# ✋  Frooddle
+# ✋  Froodle
 
 Draw in the air with your bare hand. Your webcam + an AI hand-tracking
 model turn your index fingertip into a pen, and your movements appear as
