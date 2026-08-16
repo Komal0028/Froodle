@@ -15,6 +15,10 @@ from utils import COLOR_PALETTE, MIN_BRUSH_SIZE, MAX_BRUSH_SIZE, DEFAULT_BRUSH_S
 
 SAVED_DIR = "assets/saved"
 
+# Public STUN server so WebRTC can establish a peer connection through
+# NATs/firewalls once this app is deployed to a real server (Streamlit
+# Community Cloud, etc). Without this, the browser<->server video
+# connection often fails to negotiate outside of localhost.
 RTC_CONFIGURATION = RTCConfiguration(
     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
 )
@@ -24,9 +28,12 @@ RTC_CONFIGURATION = RTCConfiguration(
 # STYLING
 # =====================================================================
 def load_css():
-    """Loads the shared glassmorphism theme, then layers page-specific
-    rules on top (hero banner, gesture chips, stat cards, empty state)
-    so the whole dashboard shares one visual language."""
+    """Loads the shared theme, then layers page-specific rules on top
+    (hero banner, gesture chips, stat strip, empty state) so the whole
+    dashboard shares one visual language: a hand-drawn marker/notebook
+    aesthetic, since this is literally an app for drawing with your
+    finger — the chrome should feel sketched, not shipped as a generic
+    dark-mode admin panel."""
     css_path = os.path.join("assets", "style.css")
     if os.path.exists(css_path):
         with open(css_path) as f:
@@ -35,71 +42,195 @@ def load_css():
     st.markdown(
         """
         <style>
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+
+        :root {
+            --ink:      #262322;
+            --ink-soft: #6b665f;
+            --paper:    #FBF6EC;
+            --paper-2:  #FFFFFF;
+            --line:     rgba(38,35,34,0.10);
+            --coral:    #FF6A52;
+            --sky:      #2F8FE0;
+            --sunshine: #F2A93C;
+            --grass:    #3FA772;
+            --grape:    #8B6BE8;
+
+            --font-display: 'Caveat', cursive;
+            --font-body: 'Manrope', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
         #MainMenu, footer, header {visibility: hidden;}
 
-        .hero {
-            padding: 46px 40px;
-            border-radius: 24px;
-            margin-bottom: 22px;
-            background: linear-gradient(135deg, rgba(99,102,241,0.20), rgba(236,72,153,0.14) 60%, rgba(14,165,233,0.16));
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.35);
-            position: relative;
-            overflow: hidden;
+        .stApp {
+            background-color: var(--paper);
+            background-image: radial-gradient(var(--line) 1.4px, transparent 1.4px);
+            background-size: 24px 24px;
         }
-        .hero::after {
-            content: "";
-            position: absolute; inset: 0;
-            background: radial-gradient(circle at 85% 20%, rgba(167,139,250,0.25), transparent 55%);
-            pointer-events: none;
+        html, body, [class*="css"] { font-family: var(--font-body); color: var(--ink); }
+        p, span, div, label { color: var(--ink); }
+
+        /* ---------- signature: sketchy double-outline ----------
+           An ink border plus an offset flat shadow, like a shape
+           drawn twice by hand with a marker slightly out of register.
+           Used consistently on cards, chips, badges and buttons so it
+           reads as one deliberate motif rather than decoration. */
+        .note-card, .badge, .gesture-chip, .stat-card {
+            border: 2px solid var(--ink);
+            box-shadow: 4px 4px 0 var(--line-shadow, var(--coral));
+        }
+
+        /* ---------- hero ---------- */
+        .hero {
+            padding: 44px 40px 38px;
+            border-radius: 22px;
+            margin-bottom: 26px;
+            background: var(--paper-2);
+            border: 2px solid var(--ink);
+            box-shadow: 6px 6px 0 var(--line);
+            position: relative;
+        }
+        .hero-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 11.5px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--ink-soft);
+            margin-bottom: 6px;
         }
         .hero-title {
-            font-size: 42px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin: 0 0 6px 0;
-            background: linear-gradient(90deg, #a5b4fc, #f0abfc, #7dd3fc);
-            -webkit-background-clip: text; background-clip: text; color: transparent;
+            font-family: var(--font-display);
+            font-size: 76px;
+            line-height: 0.95;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0 0 4px 0;
+            color: var(--ink);
+            display: inline-block;
         }
-        .hero-sub { color: #b7bcd0; font-size: 16px; max-width: 640px; }
-        .badge-row { margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .hero-squiggle { display: block; margin: 2px 0 14px -4px; }
+        .hero-sub { color: var(--ink-soft); font-size: 17px; max-width: 620px; line-height: 1.55; }
+
+        .badge-row { margin-top: 22px; display: flex; gap: 12px; flex-wrap: wrap; }
         .badge {
-            padding: 6px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
-            background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); color: #d8dbea;
+            padding: 7px 16px; border-radius: 999px; font-size: 13px; font-weight: 700;
+            background: var(--paper-2); color: var(--ink);
         }
+        .badge-row .badge:nth-child(1) { --line-shadow: var(--sky); }
+        .badge-row .badge:nth-child(2) { --line-shadow: var(--coral); }
+        .badge-row .badge:nth-child(3) { --line-shadow: var(--grape); }
+        .badge-row .badge:nth-child(4) { --line-shadow: var(--grass); }
 
+        /* ---------- stat strip ---------- */
         .stat-card {
-            padding: 18px 20px; border-radius: 16px;
-            background: rgba(255,255,255,0.045);
-            border: 1px solid rgba(255,255,255,0.08);
+            padding: 16px 14px; border-radius: 14px;
+            background: var(--paper-2);
             text-align: center;
-            transition: transform 0.15s ease;
+            --line-shadow: var(--sunshine);
         }
-        .stat-card:hover { transform: translateY(-3px); }
-        .stat-value { font-size: 26px; font-weight: 800; color: #e6e8f5; }
-        .stat-label { font-size: 12.5px; color: #9aa0b4; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-value {
+            font-family: var(--font-mono); font-size: 26px; font-weight: 700; color: var(--ink);
+        }
+        .stat-label {
+            font-family: var(--font-body); font-size: 11.5px; color: var(--ink-soft);
+            margin-top: 4px; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700;
+        }
 
+        /* ---------- generic content card ---------- */
+        .glass-card {
+            padding: 26px 30px;
+            margin-bottom: 24px;
+            border-radius: 20px;
+            background: var(--paper-2);
+            box-shadow: 5px 5px 0 var(--line);
+            border: 2px solid var(--ink);
+        }
+
+        /* ---------- gesture chips ---------- */
         .gesture-chip {
             display: inline-flex; align-items: center; gap: 8px;
-            padding: 10px 14px; border-radius: 14px; margin: 5px 6px 5px 0;
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
-            font-size: 13.5px; color: #dfe1ee;
+            padding: 10px 16px; border-radius: 12px; margin: 6px 8px 6px 0;
+            background: var(--paper-2); font-size: 13.5px; color: var(--ink); font-weight: 600;
         }
-        .gesture-chip b { color: #c4b5fd; }
+        .gesture-chip b { color: var(--ink); }
+        .gesture-chip:nth-of-type(1) { --line-shadow: var(--coral); }
+        .gesture-chip:nth-of-type(2) { --line-shadow: var(--sky); }
+        .gesture-chip:nth-of-type(3) { --line-shadow: var(--ink-soft); }
+        .gesture-chip:nth-of-type(4) { --line-shadow: var(--grass); }
+        .gesture-chip:nth-of-type(5) { --line-shadow: var(--sunshine); }
 
         .empty-state {
-            text-align: center; padding: 46px 20px; color: #9aa0b4;
-            border: 1px dashed rgba(255,255,255,0.15); border-radius: 16px;
+            text-align: center; padding: 48px 20px; color: var(--ink-soft);
+            border: 2px dashed var(--ink); border-radius: 16px; background: var(--paper);
+            font-size: 15px;
         }
 
         .section-title {
-            font-size: 13px; letter-spacing: 1.2px; text-transform: uppercase;
-            color: #8f94ab; font-weight: 700; margin: 4px 0 10px 2px;
+            font-family: var(--font-mono);
+            font-size: 12px; letter-spacing: 1.6px; text-transform: uppercase;
+            color: var(--ink-soft); font-weight: 700; margin: 6px 0 12px 2px;
+        }
+
+        /* ---------- headings ---------- */
+        h1, h2, h3 { font-family: var(--font-body); font-weight: 800 !important; color: var(--ink); }
+
+        /* ---------- buttons ---------- */
+        .stButton > button {
+            border-radius: 12px !important;
+            border: 2px solid var(--ink) !important;
+            background: var(--coral) !important;
+            color: var(--ink) !important;
+            font-weight: 700 !important;
+            font-family: var(--font-body) !important;
+            padding: 10px 20px !important;
+            box-shadow: 3px 3px 0 var(--ink) !important;
+            transition: transform 0.12s ease, box-shadow 0.12s ease !important;
+        }
+        .stButton > button:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--ink) !important;
+        }
+        .stButton > button:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0 var(--ink) !important;
+        }
+
+        .stDownloadButton > button {
+            border-radius: 12px !important;
+            background: var(--paper-2) !important;
+            border: 2px solid var(--ink) !important;
+            color: var(--ink) !important;
+            font-weight: 700 !important;
+            box-shadow: 3px 3px 0 var(--sky) !important;
+        }
+
+        /* ---------- tabs, styled as notebook index tabs ---------- */
+        .stTabs [data-baseweb="tab-list"] { gap: 6px; border-bottom: 2px solid var(--ink); }
+        .stTabs [data-baseweb="tab"] {
+            font-family: var(--font-body); font-weight: 700; font-size: 14.5px;
+            border-radius: 10px 10px 0 0;
+            padding: 10px 18px;
+            background: var(--paper);
+            border: 2px solid var(--ink); border-bottom: none;
+            color: var(--ink-soft);
+        }
+        .stTabs [aria-selected="true"] { background: var(--paper-2); color: var(--ink); }
+        .stTabs [data-baseweb="tab-list"] button:nth-child(1)[aria-selected="true"] { border-top: 4px solid var(--coral); }
+        .stTabs [data-baseweb="tab-list"] button:nth-child(2)[aria-selected="true"] { border-top: 4px solid var(--sky); }
+        .stTabs [data-baseweb="tab-list"] button:nth-child(3)[aria-selected="true"] { border-top: 4px solid var(--grass); }
+        .stTabs [data-baseweb="tab-list"] button:nth-child(4)[aria-selected="true"] { border-top: 4px solid var(--grape); }
+
+        /* ---------- form controls ---------- */
+        .stSlider [data-baseweb="slider"] > div > div { background: var(--coral) !important; }
+        input[type="radio"] { accent-color: var(--coral); }
+        .stCheckbox label p { font-weight: 600; }
+        .stTextInput input {
+            border-radius: 10px !important; border: 2px solid var(--ink) !important;
+            font-family: var(--font-mono) !important;
         }
 
         div[data-testid="stImage"] img {
-            border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px !important;
+            border: 2px solid var(--ink);
         }
         </style>
         """,
@@ -114,7 +245,12 @@ def render_hero():
     st.markdown(
         """
         <div class="hero">
+            <div class="hero-eyebrow">Air-drawing, sketched in real time</div>
             <div class="hero-title">Froodle</div>
+            <svg class="hero-squiggle" width="220" height="18" viewBox="0 0 220 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 12C20 3 35 3 52 10C69 17 84 5 101 6C118 7 130 15 148 9C166 3 180 12 198 8C207 6 213 9 217 12"
+                      stroke="#FF6A52" stroke-width="4" stroke-linecap="round"/>
+            </svg>
             <div class="hero-sub">
                 i am still figuring out what to write here...
             </div>
@@ -150,13 +286,18 @@ def render_stats(num_drawings: int, ai_ready: bool):
 
 
 def render_draw_tab():
-    
+    """
+    The browser-based whiteboard. Works both locally AND once deployed —
+    the webcam feed streams from the visitor's own browser via WebRTC,
+    gets processed frame-by-frame on the server (hand tracking + drawing),
+    and streams back. No native window, no local-only subprocess.
+    """
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     st.subheader("happy drawing")
     st.write(
         "Allow camera access below, then raise only your index finger "
         "and start drawing twin."
-       
+
     )
 
     col_video, col_controls = st.columns([2, 1])
@@ -188,6 +329,8 @@ def render_draw_tab():
             async_processing=True,
         )
 
+    # Push the sidebar's current settings into the live processor instance.
+    # video_processor is only available once the stream has actually started.
     if ctx.video_processor:
         ctx.video_processor.current_color_name = color_name
         ctx.video_processor.brush_size = brush_size
