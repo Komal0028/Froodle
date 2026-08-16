@@ -244,7 +244,7 @@ def load_css():
 def render_hero():
     st.markdown(
         """
-        <div class="hero">
+        <div class="hero" style="text-align: center;">
             <div class="hero-eyebrow">Air-drawing, sketched in real time</div>
             <div class="hero-title">Froodle</div>
             <svg class="hero-squiggle" width="220" height="18" viewBox="0 0 220 18" fill="none" xmlns="http://www.w3.org/2000/svg">
