@@ -6,4 +6,3 @@ mediapipe==0.10.14
 numpy==1.26.4
 openai==1.44.0
 python-dotenv
-tornado>=6.4
