@@ -260,11 +260,11 @@ def render_draw_tab():
 
 def render_local_launch_tab():
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-    st.subheader("💻 Launch Native Window (local only)")
+    st.subheader(" Launch Native Window (local only)")
     st.write(
-        "If you're running this dashboard on your own computer (not a cloud deployment), "
-        "you can alternatively launch the classic native OpenCV window — slightly lower "
-        "latency than the browser version above."
+        "If you're running this dashboard on your own computer (congratulations), "
+        "you can alternatively launch the classic native OpenCV window actually completely unnecessary though "
+        
     )
     if st.button("▶  Start Native Whiteboard", use_container_width=True):
         try:
@@ -273,8 +273,8 @@ def render_local_launch_tab():
         except Exception as e:
             st.error(f"Could not launch whiteboard: {e}")
     st.caption(
-        "⚠️ This button does nothing useful when the app is deployed to a server "
-        "(e.g. Streamlit Community Cloud) — use the **Draw in Browser** tab instead."
+        "⚠️ This button does nothing just like me gang HEHEHE "
+        
     )
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -287,13 +287,13 @@ def render_gallery_tab():
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     header_col1, header_col2 = st.columns([3, 1])
     with header_col1:
-        st.subheader("🖼️ Saved Drawings")
+        st.subheader(" Saved Drawings")
     with header_col2:
         if images:
             st.caption(f"{len(images)} saved")
 
     if not explainer.is_configured():
-        st.caption("ℹ️ Set an OpenAI API key in **Settings** to enable 'Explain My Drawing'.")
+        st.caption("ℹ️ Set an OpenAI API key to enable 'Explain My Drawing'. STILL WORKING ON THIS GANG")
 
     if not images:
         st.markdown(
@@ -310,7 +310,7 @@ def render_gallery_tab():
             st.image(image_path, caption=os.path.basename(image_path))
             btn_col1, btn_col2 = st.columns(2)
             with btn_col1:
-                if st.button("🤖 Explain", key=f"explain_{i}", use_container_width=True):
+                if st.button(" Explain", key=f"explain_{i}", use_container_width=True):
                     with st.spinner("Looking at your drawing..."):
                         explanation = explainer.explain(image_path)
                     st.info(explanation)
@@ -345,8 +345,8 @@ def render_settings_tab():
 
     st.divider()
     st.caption(
-        "The core whiteboard (drawing, erasing, saving) never requires an API key or "
-        "internet connection — this only powers the optional AI description feature."
+        "The core whiteboard never requires an API key or "
+        "internet connection "
     )
     st.markdown("</div>", unsafe_allow_html=True)
 
