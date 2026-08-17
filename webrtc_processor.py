@@ -1,20 +1,4 @@
-"""
-webrtc_processor.py
---------------------
-WHY THIS FILE EXISTS:
-main.py's cv2.imshow() window only works on your own laptop — it can
-never run on a cloud server (no display, no webcam access to a remote
-machine). To make the whiteboard actually work once deployed to
-Streamlit Community Cloud, the webcam feed instead has to be streamed
-FROM the visitor's browser TO the server for processing and back, using
-WebRTC. The `streamlit-webrtc` library handles all the networking; this
-file just plugs our existing HandTracker + DrawingCanvas logic into its
-per-frame callback.
 
-This reuses the exact same gesture-recognition logic as main.py — the
-"AI" part of the project does not change at all between the local and
-cloud versions, only how the video frames get in and out.
-"""
 
 import av
 import cv2
