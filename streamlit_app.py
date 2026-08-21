@@ -182,5 +182,5 @@ def load_css():
     )
 
 
-CRITTER_PANDA = ""
+CRITTER_PANDA = """
 <svg class="critter
