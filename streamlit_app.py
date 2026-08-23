@@ -5,6 +5,7 @@ import subprocess
 import sys
 import time
 
+import requests
 import streamlit as st
 from streamlit_webrtc import webrtc_streamer, RTCConfiguration, WebRtcMode
 
@@ -12,20 +13,32 @@ from ai_explainer import DrawingExplainer
 from webrtc_processor import WhiteboardProcessor
 from utils import COLOR_PALETTE, MIN_BRUSH_SIZE, MAX_BRUSH_SIZE, DEFAULT_BRUSH_SIZE
 
-# Streamlit Cloud blocks/proxies raw UDP, so STUN-only ICE negotiation
-# fails there even though it works locally. A TURN relay is required
-# for the video connection to actually establish once deployed.
-# Open Relay Project is a free public TURN service, good enough for a
-# portfolio/demo deployment. For production reliability, switch to a
-# paid provider like Twilio's Network Traversal Service.
-RTC_CONFIGURATION = RTCConfiguration({
-    "iceServers": [
-        {"urls": ["stun:stun.l.google.com:19302"]},
-        {"urls": ["turn:openrelay.metered.ca:80"], "username": "openrelayproject", "credential": "openrelayproject"},
-        {"urls": ["turn:openrelay.metered.ca:443"], "username": "openrelayproject", "credential": "openrelayproject"},
-        {"urls": ["turn:openrelay.metered.ca:443?transport=tcp"], "username": "openrelayproject", "credential": "openrelayproject"},
-    ]
-})
+# The shared free Open Relay static credentials get overloaded since
+# they're public and used by countless tutorials. A personal free
+# Metered TURN key (set as Streamlit secrets) is far more reliable.
+# Falls back to the shared credentials if no personal key is configured,
+# so the app never hard-crashes even without secrets set.
+@st.cache_data(ttl=3000)
+def get_ice_servers():
+    try:
+        api_key = st.secrets["METERED_API_KEY"]
+        subdomain = st.secrets["METERED_SUBDOMAIN"]
+        resp = requests.get(
+            f"https://{subdomain}.metered.live/api/v1/turn/credentials",
+            params={"apiKey": api_key},
+            timeout=5,
+        )
+        resp.raise_for_status()
+        return resp.json()
+    except Exception:
+        return [
+            {"urls": "stun:stun.l.google.com:19302"},
+            {"urls": "turn:openrelay.metered.ca:80", "username": "openrelayproject", "credential": "openrelayproject"},
+            {"urls": "turn:openrelay.metered.ca:443", "username": "openrelayproject", "credential": "openrelayproject"},
+            {"urls": "turn:openrelay.metered.ca:443?transport=tcp", "username": "openrelayproject", "credential": "openrelayproject"},
+        ]
+
+RTC_CONFIGURATION = RTCConfiguration({"iceServers": get_ice_servers()})
 
 # aioice/aiortc log a lot of retry noise while ICE negotiates; this just
 # keeps the terminal/log panel readable, it doesn't affect connectivity.
