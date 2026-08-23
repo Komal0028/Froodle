@@ -18,6 +18,10 @@ from utils import COLOR_PALETTE, MIN_BRUSH_SIZE, MAX_BRUSH_SIZE, DEFAULT_BRUSH_S
 # Metered TURN key (set as Streamlit secrets) is far more reliable.
 # Falls back to the shared credentials if no personal key is configured,
 # so the app never hard-crashes even without secrets set.
+# NOTE: this must NOT be called at module level — st.cache_data touches
+# the Streamlit runtime, and set_page_config() must be the very first
+# Streamlit command executed. So this is only called later, inside
+# render_draw_tab(), after main() has already called set_page_config().
 @st.cache_data(ttl=3000)
 def get_ice_servers():
     try:
@@ -37,8 +41,6 @@ def get_ice_servers():
             {"urls": "turn:openrelay.metered.ca:443", "username": "openrelayproject", "credential": "openrelayproject"},
             {"urls": "turn:openrelay.metered.ca:443?transport=tcp", "username": "openrelayproject", "credential": "openrelayproject"},
         ]
-
-RTC_CONFIGURATION = RTCConfiguration({"iceServers": get_ice_servers()})
 
 # aioice/aiortc log a lot of retry noise while ICE negotiates; this just
 # keeps the terminal/log panel readable, it doesn't affect connectivity.
@@ -263,10 +265,11 @@ def render_draw_tab():
         save_clicked = btn_col4.button("💾 Save", use_container_width=True)
 
     with col_video:
+        rtc_configuration = RTCConfiguration({"iceServers": get_ice_servers()})
         ctx = webrtc_streamer(
             key="ai-air-whiteboard",
             mode=WebRtcMode.SENDRECV,
-            rtc_configuration=RTC_CONFIGURATION,
+            rtc_configuration=rtc_configuration,
             video_processor_factory=WhiteboardProcessor,
             media_stream_constraints={"video": True, "audio": False},
             async_processing=True,
